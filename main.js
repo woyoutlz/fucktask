@@ -18,21 +18,33 @@ var app = new Vue({
         }
     },
     methods: {
+        logout: function() {
+            localStorage.setItem("token", null);
+            location.reload();
+        },
+        auto_load: function(token) {
+            g.refroot = new Wilddog("https://woyoutlz-task.wilddogio.com");
+            g.refroot.authWithCustomToken(token, this.afterAuth);
+        },
         load_user: function() {
             g.refroot = new Wilddog("https://woyoutlz-task.wilddogio.com");
             g.refroot.authWithPassword({
                 email: this.tmpuser,
                 password: this.tmppass
-            }, function(error, authData) {
-                if (error) {
-                    console.log("Login Failed!", error);
-                } else {
-                    console.log("Authenticated successfully with payload:", authData);
-                    appdata.user = authData.uid
-                    ref = g.refroot.child("users/" + appdata.user + "/tasks");
-                    app.makeNowRefOn("root");
+            }, this.afterAuth);
+        },
+        afterAuth: function(error, authData) {
+            if (error) {
+                console.log("Login Failed!", error);
+            } else {
+                console.log("Authenticated successfully with payload:", authData);
+                appdata.user = authData.uid
+                ref = g.refroot.child("users/" + appdata.user + "/tasks");
+                app.makeNowRefOn("root");
+                if (app.tmpsave) {
+                    localStorage.setItem("token", authData.token)
                 }
-            });
+            }
         },
         onvalue: function(datasnapshot, error) {
             if (error == null) {
@@ -109,3 +121,10 @@ var app = new Vue({
         }
     }
 })
+
+function auto_login() {
+    if (localStorage.getItem("token") != null) {
+        app.auto_load(localStorage.getItem("token"))
+    }
+}
+auto_login();
