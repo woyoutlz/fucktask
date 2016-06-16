@@ -11,7 +11,7 @@
 </head>
 
 <body id="app">
-    <h1 v-if="!user">输入用户名<input v-model="tmpuser"><a v-on:click="set_user">确定</a></h1>
+    <h1 v-if="!user">输入用户名<input v-model="tmpuser">密码<input v-model="tmppass"><a v-on:click="set_user">确定</a></h1>
     <div v-if="user">
         <h2 class="main_input"><input type="text" v-model="input_task" v-on:keyup.enter="add_task"><a v-on:click="add_task" class="btn">增加</a></h2>
         <div class="guid">

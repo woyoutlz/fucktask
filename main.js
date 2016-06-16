@@ -1,7 +1,7 @@
 var ref;
 
 var appdata = {
-    user: "simplelogin:1465897462718389",
+    user: null,
     history: [{
         name: "root",
         id: "root"
@@ -21,17 +21,18 @@ var app = new Vue({
         load_user: function() {
             g.refroot = new Wilddog("https://woyoutlz-task.wilddogio.com");
             g.refroot.authWithPassword({
-                email: 'yundkyy@qq.com',
-                password: '111111'
+                email: this.tmpuser,
+                password: this.tmppass
             }, function(error, authData) {
                 if (error) {
                     console.log("Login Failed!", error);
                 } else {
                     console.log("Authenticated successfully with payload:", authData);
+                    appdata.user = authData.uid
+                    ref = g.refroot.child("users/" + appdata.user + "/tasks");
+                    app.makeNowRefOn("root");
                 }
             });
-            ref = g.refroot.child("users/" + this.user + "/tasks")
-            this.makeNowRefOn("root");
         },
         onvalue: function(datasnapshot, error) {
             if (error == null) {
@@ -55,7 +56,7 @@ var app = new Vue({
             });
         },
         set_user: function() {
-            this.user = this.tmpuser
+            // this.user = this.tmpuser
             this.load_user()
         },
         add_task: function() {
