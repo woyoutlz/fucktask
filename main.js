@@ -49,6 +49,7 @@ var app = new Vue({
         onvalue: function(datasnapshot, error) {
             if (error == null) {
                 console.log("on", datasnapshot.val());
+                
                 // 结果会在 console 中打印出 "beijing"
                 app.$set('tasks', datasnapshot.val() || {})
             }
@@ -78,7 +79,8 @@ var app = new Vue({
 
             ref.push({
                 title: this.input_task,
-                father: appdata.father
+                father: appdata.father,
+                order:1
             }, function(err) {
                 app.input_task = "";
             })

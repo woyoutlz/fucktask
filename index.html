@@ -13,7 +13,7 @@
 <body id="app">
     <h1 v-if="!user">输入用户名<input v-model="tmpuser">密码<input v-model="tmppass"><a v-on:click="set_user">确定</a>保持登陆<input type="checkbox" id="checkbox" v-model="tmpsave"></h1>
     <div v-if="user">
-        <h3 ><a class="btn" v-on:click="logout">logout</a></h3>
+        <h3 style="text-align:right"><a class="btn" v-on:click="logout">logout</a></h3>
         <h2 class="main_input"><input type="text" v-model="input_task" v-on:keyup.enter="add_task"><a v-on:click="add_task" class="btn">增加</a></h2>
         <div class="guid">
             <a v-for="(index, father) in history" class="clickable guid_a" v-on:click="back_task(index)">{{ father.name }}/</a>
