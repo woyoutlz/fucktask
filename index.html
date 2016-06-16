@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>任务栏</title>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.less" rel="stylesheet/less" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
+</head>
+
+<body id="app">
+    <h1 v-if="!user">输入用户名<input v-model="tmpuser"><a v-on:click="set_user">确定</a></h1>
+    <div v-if="user">
+        <h2 class="main_input"><input type="text" v-model="input_task" v-on:keyup.enter="add_task"><a v-on:click="add_task" class="btn">增加</a></h2>
+        <div class="guid">
+            <a v-for="(index, father) in history" class="clickable guid_a" v-on:click="back_task(index)">{{ father.name }}/</a>
+        </div>
+        <div>
+            <div class="subtask_titles">
+                <div class="subtask_title" v-for="(index, task) in tasks"><a v-on:click="remove_task(index)" class="btn primary"><span class="glyphicon glyphicon-remove"></span></a><span v-on:click="into_task(index)" class="clickable subtasktitle" title="{{ task.title }}">{{ task.title }}</span>
+                    <a v-on:click="edit_task(index)" class="btn"><span class="glyphicon glyphicon-pencil"></span></a>
+                </div>
+            </div>
+            <div class="taskcontent" v-if="father!='root'">
+              <textarea id="taskcontent_text" name="" id="" cols="30" rows="10" v-model="tmp_content"></textarea>
+              <a class="btn btn-primary"  v-on:click="save_task_content">保存</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.min.js"></script>
+    <script type="text/javascript" src="/main.js"></script>
+</body>
+
+</html>
