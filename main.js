@@ -7,38 +7,38 @@ var appdata = {
         id: "root"
     }],
     father: "root"
-}
-var g = {}
+};
+var g = {};
 var app = new Vue({
     el: '#app',
     data: appdata,
-    created: function() {
+    created: function () {
         if (appdata.user) {
             this.load_user()
         }
     },
     methods: {
-        logout: function() {
+        logout: function () {
             localStorage.setItem("token", null);
             location.reload();
         },
-        auto_load: function(token) {
+        auto_load: function (token) {
             g.refroot = new Wilddog("https://woyoutlz-task.wilddogio.com");
             g.refroot.authWithCustomToken(token, this.afterAuth);
         },
-        load_user: function() {
+        load_user: function () {
             g.refroot = new Wilddog("https://woyoutlz-task.wilddogio.com");
             g.refroot.authWithPassword({
                 email: this.tmpuser,
                 password: this.tmppass
             }, this.afterAuth);
         },
-        afterAuth: function(error, authData) {
+        afterAuth: function (error, authData) {
             if (error) {
                 console.log("Login Failed!", error);
             } else {
                 console.log("Authenticated successfully with payload:", authData);
-                appdata.user = authData.uid
+                appdata.user = authData.uid;
                 ref = g.refroot.child("users/" + appdata.user + "/tasks");
                 app.makeNowRefOn("root");
                 if (app.tmpsave) {
@@ -46,21 +46,21 @@ var app = new Vue({
                 }
             }
         },
-        onvalue: function(datasnapshot, error) {
+        onvalue: function (datasnapshot, error) {
             if (error == null) {
                 console.log("on", datasnapshot.val());
-                
+
                 // 结果会在 console 中打印出 "beijing"
                 app.$set('tasks', datasnapshot.val() || {})
             }
         },
-        makeNowRefOn: function(fathername) {
+        makeNowRefOn: function (fathername) {
             ref.off("value", this.onvalue);
             ref.orderByChild("father").equalTo(fathername).on("value", this.onvalue);
             if (fathername == "root") {
                 return;
             }
-            ref.child(fathername + "/content").once("value", function(d, e) {
+            ref.child(fathername + "/content").once("value", function (d, e) {
                 if (e == null) {
                     console.log(1, d.val());
                     // 结果会在 console 中打印出 "beijing"
@@ -68,11 +68,11 @@ var app = new Vue({
                 }
             });
         },
-        set_user: function() {
+        set_user: function () {
             // this.user = this.tmpuser
             this.load_user()
         },
-        add_task: function() {
+        add_task: function () {
             if (this.input_task == "") {
                 return;
             }
@@ -80,18 +80,18 @@ var app = new Vue({
             ref.push({
                 title: this.input_task,
                 father: appdata.father,
-                order:1
-            }, function(err) {
+                order: 1
+            }, function (err) {
                 app.input_task = "";
             })
         },
-        remove_task: function(index) {
+        remove_task: function (index) {
             if (window.confirm("确定删除吗?")) {
                 ref.child(index + "").remove()
             }
 
         },
-        edit_task: function(index) {
+        edit_task: function (index) {
             var message = prompt("输入新的值", this.tasks[index]["title"]);
             if (message == "") {
                 return;
@@ -100,7 +100,7 @@ var app = new Vue({
                 title: message
             })
         },
-        into_task: function(index) {
+        into_task: function (index) {
             appdata.father = index;
             appdata.history.push({
                 id: appdata.father,
@@ -110,13 +110,13 @@ var app = new Vue({
 
             this.makeNowRefOn(appdata.father);
         },
-        back_task: function(index) {
+        back_task: function (index) {
             appdata.history = appdata.history.slice(0, index + 1);
             last = appdata.history[appdata.history.length - 1];
-            appdata.father = last.id
+            appdata.father = last.id;
             this.makeNowRefOn(last.id);
         },
-        save_task_content: function() {
+        save_task_content: function () {
             ref.child(appdata.father).update({
                 content: this.tmp_content
             })
